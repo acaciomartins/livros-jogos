@@ -1,0 +1,39 @@
+{
+    "nome": "Durval",
+    "habilidade": 10,
+    "energia": 20,
+    "sorte": 18,
+    "suprimento": 10,
+    "ouro": 5,
+    "equipamentos": ["mochila", "espada"],
+    "pocoes": ["energia"],
+    "combates": ["goblin 01"],
+    "historico": [1, 2],
+    "salvos": [{
+        "ficha01": {
+            "data": "11/09/2019",
+            "habilidade": 10,
+            "energia": 20,
+            "sorte": 18,
+            "suprimento": 10,
+            "ouro": 5,
+            "equipamentos": ["mochila", "espada"],
+            "pocoes": ["energia"],
+            "combates": ["goblin 01"],
+            "historico": [1, 2]
+        }
+    }, {
+        "ficha02": {
+            "data": "12/09/2019",
+            "habilidade": 10,
+            "energia": 20,
+            "sorte": 18,
+            "suprimento": 10,
+            "ouro": 5,
+            "equipamentos": ["mochila", "espada"],
+            "pocoes": ["energia"],
+            "combates": ["goblin 01"],
+            "historico": [1, 2]
+        }
+    }]
+}
