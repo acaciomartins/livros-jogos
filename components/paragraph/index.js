@@ -5,9 +5,6 @@ import { blue } from 'ansi-colors';
 import livro from '../../model/ACidadeDosLadroes.json';
 import ficha from '../../model/ficha.json';
 
-// import {livro} from '../model/ACidadeDosLadroes'
-
-// export default function ParagraphText() {
 export default class ParagraphText extends Component {
     constructor(props) {
         super(props);
@@ -15,9 +12,9 @@ export default class ParagraphText extends Component {
             isCombat: false,
             turno: 1,
             paragraphCurrent: this.nextParagrahph(1),
-    }   
-   
+        }   
     }
+    
     render() {
         return (
             <View style={styles.container}>
@@ -63,7 +60,6 @@ export default class ParagraphText extends Component {
                             <Text style={styles.title}>Combate</Text>
                             <Text style={styles.subTitle}>Turno: {this.state.turno}</Text>
                         </View>
-
                         <View>
                             <Text style={styles.subTitle}>Você</Text>
                             <Text style={styles.subTitle}>Nome: {ficha.nome}</Text>
@@ -124,6 +120,7 @@ export default class ParagraphText extends Component {
     nextParagrahph = (next) => {
         let n = livro.capitulos.filter((chapter) => chapter.pagaragrafo === next)[0]
         this.setState({paragraphCurrent: n})
+        // Valida especial
         if (n.especial.length) {
             n.especial.forEach((e) => {
                 switch (Object.getOwnPropertyNames(e).toString()) {
@@ -141,6 +138,10 @@ export default class ParagraphText extends Component {
                 }
             })
         }
+
+        // Valida itens
+        // Se não tive item obrigatorio desabilita link proximo paragrafo
+
         return n;
     }
 
@@ -154,6 +155,14 @@ export default class ParagraphText extends Component {
             {cancelable: false},
           );
     }
+    
+    rollDiceD6 = (amount, type) => {
+        let r = 0;
+        for (i = 0; i < amount; i++) {
+            r += Math.floor(Math.random() * (type + 1));
+        }
+        return r;
+    }
 
     playAtack = (combat) => {
         let abiliityPlayer = ficha.habilidade;
@@ -163,8 +172,8 @@ export default class ParagraphText extends Component {
             let combatNow = combat[i]; 
             
             while (combatNow.energia > 0 && ficha.energia > 0) {
-                let dicePlayer = Math.floor(Math.random() * 13);
-                let diceNPC =  Math.floor(Math.random() * 13);
+                let dicePlayer = this.rollDiceD6(2, 6);
+                let diceNPC =  this.rollDiceD6(2, 6);
                 let abiliityNpc = combatNow.habilidade
     
                 if ((dicePlayer + abiliityPlayer) > (diceNPC + abiliityNpc)) {

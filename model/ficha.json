@@ -5,7 +5,7 @@
     "sorte": 18,
     "suprimento": 10,
     "ouro": 5,
-    "equipamentos": ["mochila", "espada"],
+    "itens": ["espada", "mochila"],
     "pocoes": ["energia"],
     "combates": ["goblin 01"],
     "historico": [1, 2],
