@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Button, Alert, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+import Combat from '../../components/combat'
 import { blue } from 'ansi-colors';
 import livro from '../../model/ACidadeDosLadroes.json';
 import ficha from '../../model/ficha.json';
@@ -51,68 +52,12 @@ export default class ParagraphText extends Component {
                     }
                 </View>}
 
-                {this.state.isCombat &&
-                    <View style={styles.combat}>
-                        <View
-                            style={{
-                                marginBottom: 30,
-                            }}>
-                            <Text style={styles.title}>Combate</Text>
-                            <Text style={styles.subTitle}>Turno: {this.state.turno}</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.subTitle}>Você</Text>
-                            <Text style={styles.subTitle}>Nome: {ficha.nome}</Text>
-                        </View>
-                        <View
-                            style={{
-                                borderTopColor: 'black',
-                                borderTopWidth: 1,
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                flexWrap: "wrap",
-                                flex: 1,
-                                marginBottom: 30,
-                            }}>
-                            
-                            <Text>Habilidade: {ficha.habilidade}</Text>
-                            <Text>Energia: {ficha.energia}</Text>
-                            <Text>Sorte: {ficha.sorte}</Text>
-                        </View>
-                        <View>
-                        <Text style={styles.subTitle}>Adversário(s)</Text>
-                            <FlatList 
-                                data={this.state.paragraphCurrent.combate}
-                                renderItem={({item}) => 
-                                    <View
-                                        style={{
-                                            borderTopColor: 'black',
-                                            borderTopWidth: 1,
-                                            flexDirection: "row",
-                                            justifyContent: "space-between",
-                                            flexWrap: "wrap",
-                                            flex: 1,
-                                            flexGrow: 1,
-                                        }}>
-                                        <Text>Nome: {item.nome}</Text>
-                                        <Text>Habilidade: {item.habilidade}</Text>
-                                        <Text>Energia: {item.energia}</Text>
-                                    </View>}>
-                            </FlatList>
-                        </View>
-                        <View>
-                        <TouchableOpacity 
-                            onPress={() => this.playAtack(this.state.paragraphCurrent.combate)} 
-                            style={styles.buttonRed}>
-                            <Text style={styles.buttonText}>Iniciar Ataque</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            onPress={() => this.openCloseModal('isCombat')} 
-                            style={styles.buttonBlue}>
-                            <Text style={styles.buttonText}>Voltar</Text>
-                        </TouchableOpacity>
-                        </View>
-                    </View>}
+                {this.state.isCombat && <Combat 
+                    ficha={ficha}
+                    turno={this.state.turno}
+                    paragraphCurrent={this.state.paragraphCurrent}
+                    openCloseModal={this.openCloseModal.bind(this, 'isCombat')}
+                    ></Combat>}
             </View>
         )
     }
@@ -143,56 +88,6 @@ export default class ParagraphText extends Component {
         // Se não tive item obrigatorio desabilita link proximo paragrafo
 
         return n;
-    }
-
-    alertCombat = (turno) => {
-        Alert.alert(
-            `${turno.titulo}`,
-            `${turno.mensagem}`,
-            [
-              {text: 'OK', onPress: () => console.log('OK Pressed')},
-            ],
-            {cancelable: false},
-          );
-    }
-    
-    rollDiceD6 = (amount, type) => {
-        let r = 0;
-        for (i = 0; i < amount; i++) {
-            r += Math.floor(Math.random() * (type + 1));
-        }
-        return r;
-    }
-
-    playAtack = (combat) => {
-        let abiliityPlayer = ficha.habilidade;
-        
-        for (i = 0; i < combat.length; i++) {
-            this.setState({turno: i})
-            let combatNow = combat[i]; 
-            
-            while (combatNow.energia > 0 && ficha.energia > 0) {
-                let dicePlayer = this.rollDiceD6(2, 6);
-                let diceNPC =  this.rollDiceD6(2, 6);
-                let abiliityNpc = combatNow.habilidade
-    
-                if ((dicePlayer + abiliityPlayer) > (diceNPC + abiliityNpc)) {
-                    combatNow.energia = combatNow.energia - 2;
-                    let turno = {
-                        "titulo":  `Você Ganhou!!!`,
-                        "mensagem": `2d6 = [${dicePlayer}] + ${abiliityPlayer} = ${dicePlayer + abiliityPlayer} contra NPC = ${diceNPC + abiliityNpc}`
-                    }
-                    this.alertCombat(turno);
-                } else if ((dicePlayer + abiliityPlayer) < (diceNPC + abiliityNpc)) {
-                    ficha.energia = ficha.energia - 2;
-                    let turno = {
-                        "titulo":  `${combatNow.nome} Ganhou!!!`,
-                        "mensagem": `2d6 = [${diceNPC}] + ${abiliityNpc} = ${diceNPC + abiliityNpc}  contra Você = ${dicePlayer + abiliityPlayer}`,
-                    }
-                    this.alertCombat(turno);
-                }
-            }
-        }
     }
 
     openCloseModal = (key) => {
